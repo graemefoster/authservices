@@ -167,7 +167,7 @@ namespace Kentor.AuthServices
 
             xmlDocument = xml;
 
-            xml.Sign(issuerCertificate);
+            xml.Sign(issuerCertificate, "");
         }
 
         readonly Saml2Id id;
@@ -231,7 +231,9 @@ namespace Kentor.AuthServices
             {
                 var signedXml = new SignedXml(xmlDocument);
 
-                var signature = xmlDocument.DocumentElement["Signature", SignedXml.XmlDsigNamespaceUrl];
+                var nm = new XmlNamespaceManager(new NameTable());
+                nm.AddNamespace("ds", "http://www.w3.org/2000/09/xmldsig#");
+                var signature = (XmlElement)xmlDocument.SelectSingleNode("//ds:Signature", nm);
 
                 if (signature != null)
                 {

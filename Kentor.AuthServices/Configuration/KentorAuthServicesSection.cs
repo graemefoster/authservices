@@ -12,7 +12,7 @@ namespace Kentor.AuthServices.Configuration
     /// </summary>
     public class KentorAuthServicesSection : ConfigurationSection
     {
-        private static readonly KentorAuthServicesSection current = 
+        private static readonly KentorAuthServicesSection current =
             (KentorAuthServicesSection)ConfigurationManager.GetSection("kentor.authServices");
 
         /// <summary>
@@ -51,9 +51,21 @@ namespace Kentor.AuthServices.Configuration
         }
 
         /// <summary>
+        /// Certificate location for the certificate the Idp uses to sign its messages.
+        /// </summary>
+        [ConfigurationProperty("signingCertificate", IsRequired = true)]
+        public CertificateElement SigningCertificate
+        {
+            get
+            {
+                return (CertificateElement)base["signingCertificate"];
+            }
+        }
+
+        /// <summary>
         /// The Uri to redirect back to after successfull authentication.
         /// </summary>
-        [ConfigurationProperty("returnUri", IsRequired=true)]
+        [ConfigurationProperty("returnUri", IsRequired = true)]
         public Uri ReturnUri
         {
             get
@@ -65,8 +77,8 @@ namespace Kentor.AuthServices.Configuration
         /// <summary>
         /// Set of identity providers known to the service provider.
         /// </summary>
-        [ConfigurationProperty("", IsRequired=true, IsDefaultCollection=true)]
-        [ConfigurationCollection(typeof(IdentityProviderCollection), AddItemName="identityProvider")]
+        [ConfigurationProperty("", IsRequired = true, IsDefaultCollection = true)]
+        [ConfigurationCollection(typeof(IdentityProviderCollection), AddItemName = "identityProvider")]
         public IdentityProviderCollection IdentityProviders
         {
             get
@@ -74,5 +86,6 @@ namespace Kentor.AuthServices.Configuration
                 return (IdentityProviderCollection)base[""];
             }
         }
+
     }
 }

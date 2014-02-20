@@ -39,7 +39,7 @@ namespace Kentor.AuthServices
         {
             var audienceRestriction = new AudienceRestriction(AudienceUriMode.Always);
             audienceRestriction.AllowedAudienceUris.Add(
-                new Uri(KentorAuthServicesSection.Current.Issuer));
+                new Uri(KentorAuthServicesSection.Current.Issuer, UriKind.Relative));
 
             defaultInstance = new MorePublicSaml2SecurityTokenHandler()
             {

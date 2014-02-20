@@ -88,13 +88,20 @@ namespace Kentor.AuthServices
 
             if (DestinationUri != null)
             {
-                yield return new XAttribute("Destination", DestinationUri);
+                yield return new XAttribute("Destination", DestinationUri.OriginalString);
             }
 
             if (!string.IsNullOrEmpty(Issuer))
             {
                 yield return new XElement(Saml2Namespaces.Saml2 + "Issuer", Issuer);
             }
+
+            var elem = new XElement(Saml2Namespaces.Saml2P + "RequestedAuthnContext");
+            elem.SetAttributeValue("Comparison", "minimum");
+            var content = new XElement(Saml2Namespaces.Saml2 + "AuthnContextClassRef");
+            content.Value = "urn:au:qld:gov:authn:names:SAML:2.0:ac:AAL1:IRAL1:IAAL2";
+            elem.Add(content);
+            yield return elem;
         }
 
         /// <summary>

@@ -27,6 +27,7 @@ namespace Kentor.AuthServices
             DestinationUri = config.DestinationUri;
             Binding = config.Binding;
             certificate = config.SigningCertificate.LoadCertificate();
+            providerName = config.ProviderName;
         }
 
         public Saml2BindingType Binding { get; set; }
@@ -35,11 +36,13 @@ namespace Kentor.AuthServices
 
         public Saml2AuthenticationRequest CreateAuthenticateRequest()
         {
-            return new Saml2AuthenticationRequest()
+            return new Saml2AuthenticationRequest(KentorAuthServicesSection.Current.SigningCertificate.LoadCertificate())
             {
                 DestinationUri = DestinationUri,
                 AssertionConsumerServiceUrl = KentorAuthServicesSection.Current.AssertionConsumerServiceUrl,
-                Issuer = KentorAuthServicesSection.Current.Issuer
+                Issuer = KentorAuthServicesSection.Current.Issuer,
+                ProviderName = providerName,
+                Binding = Binding,
             };
         }
 
@@ -56,5 +59,7 @@ namespace Kentor.AuthServices
                 return certificate;
             }
         }
+
+        readonly string providerName;
     }
 }

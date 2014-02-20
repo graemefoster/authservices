@@ -24,6 +24,18 @@ namespace Kentor.AuthServices.Configuration
         }
 
         /// <summary>
+        /// The business service that we want to consume (optional)
+        /// </summary>
+        [ConfigurationProperty("providerName", IsRequired = false)]
+        public string ProviderName
+        {
+            get
+            {
+                return (string)base["providerName"];
+            }
+        }
+
+        /// <summary>
         /// Destination url to send requests to.
         /// </summary>
         [ConfigurationProperty("destinationUri", IsRequired = true)]

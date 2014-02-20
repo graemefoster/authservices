@@ -13,7 +13,7 @@ namespace Kentor.AuthServices
         public CommandResult Run(HttpRequestBase request)
         {
             var idp = IdentityProvider.ConfiguredIdentityProviders.First().Value;
-            
+
             var authnRequest = idp.CreateAuthenticateRequest();
 
             return idp.Bind(authnRequest);

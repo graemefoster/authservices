@@ -26,6 +26,18 @@ namespace Kentor.AuthServices.Configuration
         }
 
         /// <summary>
+        /// Password for private key of a certificate used for signing.
+        /// </summary>
+        [ConfigurationProperty("password")]
+        public string Password
+        {
+            get
+            {
+                return (string)this["password"];
+            }
+        }
+
+        /// <summary>
         /// Store name to search.
         /// </summary>
         [ConfigurationProperty("storeName")]
@@ -92,11 +104,15 @@ namespace Kentor.AuthServices.Configuration
                     fileName = HttpContext.Current.Server.MapPath(fileName);
                 }
 
-                return new X509Certificate2(fileName);
+                if (string.IsNullOrEmpty(Password))
+                {
+                    return new X509Certificate2(fileName);
+                }
+                return new X509Certificate2(fileName, Password);
             }
             else
             {
-                var store = new X509Store(StoreName, StoreLocation);              
+                var store = new X509Store(StoreName, StoreLocation);
                 store.Open(OpenFlags.ReadOnly);
                 try
                 {
@@ -105,7 +121,7 @@ namespace Kentor.AuthServices.Configuration
                     if (certs.Count != 1)
                     {
                         throw new InvalidOperationException(
-                            string.Format(CultureInfo.InvariantCulture, 
+                            string.Format(CultureInfo.InvariantCulture,
                             "Finding cert through {0} in {1}:{2} with value {3} matched {4} certificates. A unique match is required.",
                             X509FindType, StoreLocation, StoreName, FindValue, certs.Count));
                     }

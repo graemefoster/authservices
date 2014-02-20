@@ -20,7 +20,7 @@ namespace Kentor.AuthServices.Tests
             xmlDoc.PreserveWhitespace = true;
             xmlDoc.LoadXml(xml);
 
-            xmlDoc.Sign(TestCert);
+            xmlDoc.Sign(TestCert, "");
 
             return xmlDoc.OuterXml;
         }
