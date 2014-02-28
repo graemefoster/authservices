@@ -1,4 +1,5 @@
-﻿using Kentor.AuthServices.Configuration;
+﻿using System.IdentityModel.Tokens;
+using Kentor.AuthServices.Configuration;
 using System;
 using System.IdentityModel.Services;
 using System.Net;
@@ -25,7 +26,7 @@ namespace Kentor.AuthServices
 
                     var principal = new ClaimsPrincipal(samlResponse.GetClaims());
                     FederatedAuthentication.FederationConfiguration.IdentityConfiguration
-                        .ClaimsAuthenticationManager.Authenticate(null, principal);
+                                           .ClaimsAuthenticationManager.Authenticate(null, principal);
 
                     return new CommandResult()
                     {

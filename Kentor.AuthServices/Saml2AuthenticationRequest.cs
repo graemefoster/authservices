@@ -48,6 +48,13 @@ namespace Kentor.AuthServices
             x.AddAttributeIfNotNullOrEmpty("AssertionConsumerServiceURL", AssertionConsumerServiceUrl);
             x.AddAttributeIfNotNullOrEmpty("ProviderName", ProviderName);
 
+            var elem = new XElement(Saml2Namespaces.Saml2P + "RequestedAuthnContext");
+            elem.SetAttributeValue("Comparison", "minimum");
+            var content = new XElement(Saml2Namespaces.Saml2 + "AuthnContextClassRef");
+            content.Value = "urn:au:qld:gov:authn:names:SAML:2.0:ac:AAL1:IRAL1:IAAL2";
+            elem.Add(content);
+            x.Add(elem);
+
             if (Binding == Saml2BindingType.HttpPost)
             {
                 x.AddAttributeIfNotNullOrEmpty("ProtocolBinding", "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST");
@@ -64,10 +71,10 @@ namespace Kentor.AuthServices
         {
             var doc = new XmlDocument();
             doc.LoadXml(ToXElement().ToString());
-            
+
             if (_signingCertificate != null)
                 doc.Sign(_signingCertificate, Id);
-            
+
             return doc.OuterXml;
         }
     }

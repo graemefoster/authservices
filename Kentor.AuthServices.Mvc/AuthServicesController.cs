@@ -38,10 +38,20 @@ namespace Kentor.AuthServices.Mvc
         /// SignOut action that signs out the current user.
         /// </summary>
         /// <returns>Redirect to base url / </returns>
-        public ActionResult SignOut()
+        public ActionResult FederatedSignOut()
+        {
+            return CommandFactory.GetCommand("SignOut").Run(Request).ToActionResult();
+        }
+
+        /// <summary>
+        /// SignOut action that signs out the current user.
+        /// </summary>
+        /// <returns>Redirect to base url / </returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings", MessageId = "0#")]
+        public ActionResult SignOut(string redirectUrl)
         {
             FederatedAuthentication.SessionAuthenticationModule.SignOut();
-            return Redirect(Url.Content("~/"));
+            return Redirect(Url.Content(redirectUrl));
         }
     }
 }

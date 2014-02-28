@@ -17,7 +17,8 @@ namespace Kentor.AuthServices
         new Dictionary<string, ICommand>() 
         { 
             { "SignIn", new SignInCommand() },
-            { "Acs", new AcsCommand() }
+            { "Acs", new AcsCommand() },
+            {"SignOut", new SignOutCommand()}
         };
 
         /// <summary>

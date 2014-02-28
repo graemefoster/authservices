@@ -48,6 +48,18 @@ namespace Kentor.AuthServices.Configuration
         }
 
         /// <summary>
+        /// Destination url to send sign out requests to.
+        /// </summary>
+        [ConfigurationProperty("signOutUri", IsRequired = true)]
+        public Uri SignOutUri
+        {
+            get
+            {
+                return (Uri)base["signOutUri"];
+            }
+        }
+
+        /// <summary>
         /// The binding to use when sending requests to the Idp.
         /// </summary>
         [ConfigurationProperty("binding", IsRequired = true)]

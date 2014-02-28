@@ -283,6 +283,11 @@ namespace Kentor.AuthServices
                 try
                 {
                     claimsIdentities = CreateClaims().ToList();
+
+                    //Graeme - this shouldn't be here, but I can't think how to round-trip it. It's not part of the
+                    //Claims on the principal, but I need it to be able to logout. Don't have time to work out
+                    //where it should be obtained from :(
+                    claimsIdentities.First().AddClaim(new Claim("SessionIndex", SessionIndex));
                 }
                 catch (Exception ex)
                 {
@@ -293,6 +298,8 @@ namespace Kentor.AuthServices
 
             return claimsIdentities;
         }
+
+        public string SessionIndex { get { return Token.Assertion.Statements.OfType<Saml2AuthenticationStatement>().First().SessionIndex; } }
 
         private IEnumerable<ClaimsIdentity> CreateClaims()
         {
@@ -305,16 +312,16 @@ namespace Kentor.AuthServices
                 {
                     MorePublicSaml2SecurityTokenHandler handler = MorePublicSaml2SecurityTokenHandler.DefaultInstance;
 
-                    var token = (Saml2SecurityToken)MorePublicSaml2SecurityTokenHandler.DefaultInstance.ReadToken(reader);
-                    handler.DetectReplayedToken(token);
+                    Token = (Saml2SecurityToken)MorePublicSaml2SecurityTokenHandler.DefaultInstance.ReadToken(reader);
+                    handler.DetectReplayedToken(Token);
 
-                    var validateAudience = token.Assertion.Conditions.AudienceRestrictions.Count > 0;
+                    var validateAudience = Token.Assertion.Conditions.AudienceRestrictions.Count > 0;
 
-                    handler.ValidateConditions(token.Assertion.Conditions, validateAudience);
-
-                    yield return handler.CreateClaims(token);
+                    yield return handler.CreateClaims(Token);
                 }
             }
         }
+
+        public Saml2SecurityToken Token { get; private set; }
     }
 }

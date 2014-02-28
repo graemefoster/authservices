@@ -25,6 +25,7 @@ namespace Kentor.AuthServices
         public IdentityProvider(IdentityProviderElement config)
         {
             DestinationUri = config.DestinationUri;
+            SignOutUri = config.SignOutUri;
             Binding = config.Binding;
             certificate = config.SigningCertificate.LoadCertificate();
             providerName = config.ProviderName;
@@ -33,6 +34,8 @@ namespace Kentor.AuthServices
         public Saml2BindingType Binding { get; set; }
 
         public Uri DestinationUri { get; set; }
+
+        public Uri SignOutUri { get; set; }
 
         public Saml2AuthenticationRequest CreateAuthenticateRequest()
         {
@@ -46,7 +49,24 @@ namespace Kentor.AuthServices
             };
         }
 
+        public Saml2LogOffRequest CreateSignoutRequest(string sessionIndex, string qid)
+        {
+            return new Saml2LogOffRequest(KentorAuthServicesSection.Current.SigningCertificate.LoadCertificate(), sessionIndex)
+            {
+                DestinationUri = SignOutUri,
+                Issuer = KentorAuthServicesSection.Current.Issuer,
+                ProviderName = providerName,
+                Binding = Binding,
+                QId = qid
+            };
+        }
+
         public CommandResult Bind(Saml2AuthenticationRequest request)
+        {
+            return Saml2Binding.Get(Binding).Bind(request);
+        }
+
+        public CommandResult Bind(Saml2LogOffRequest request)
         {
             return Saml2Binding.Get(Binding).Bind(request);
         }
